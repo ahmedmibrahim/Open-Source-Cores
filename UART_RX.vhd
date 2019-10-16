@@ -1,5 +1,7 @@
 -- UART RX Design with Even Parity Flag
--- Modified design in NANDLAND https://www.nandland.com/vhdl/modules/module-uart-serial-port-rs232.html
+-- Modified design from NANDLAND https://www.nandland.com/vhdl/modules/module-uart-serial-port-rs232.html
+---> Added Parity Check option
+---> Removed unnecessary states
 
 library ieee;
 use ieee.std_logic_1164.all;
