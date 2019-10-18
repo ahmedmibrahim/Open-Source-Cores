@@ -1,12 +1,10 @@
--- UART RX Design with Even Parity Flag
--- Modified design from NANDLAND https://www.nandland.com/vhdl/modules/module-uart-serial-port-rs232.html
----> Added Parity Check option
----> Removed unnecessary states
-
+-- UART RX
+-- 1. Import those libraries
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+-- 2. Describe your entity
 entity UART_RX is
   port (
     i_Clk         : in  std_logic;                    -- <signal_name> : <direction> <type>; 
@@ -18,6 +16,7 @@ entity UART_RX is
   );
 end UART_RX;
 
+-- 3. Describe the architecture (contents of your entity)
 architecture rtl of UART_RX is
   -- Define Constants
   constant c_CLKS_PER_BIT : natural := 3;          -- Clock Frequency / Baud Rate
@@ -31,12 +30,12 @@ architecture rtl of UART_RX is
 
   -- p_UART_RX Signals
   signal r_RX_State_Machine   : t_RX_State_Machine := s_Idle;
-  signal r_Clk_Count:         : integer range 0 to c_CLKS_PER_BIT-1 := 0;
+  signal r_Clk_Count 	      : integer range 0 to c_CLKS_PER_BIT-1 := 0;
   signal r_Bit_Index          : integer range 0 to 7 := 0;  -- 8 Bits Total
   signal r_RX_Byte            : std_logic_vector(7 downto 0) := (others => '0');
   signal r_RX_Done            : std_logic := '0';
   signal r_RX_Parity          : std_logic := '1';	
-  signal r_Parity_Even_Count  : std_logic := '0';	
+  signal r_Parity_Even_Count  : std_logic := '1';	
   signal r_Parity_True	      : std_logic := '0';	
 
 begin
@@ -95,11 +94,15 @@ begin
           else
             r_Clk_Count          <= 0;
             r_RX_Byte(r_Bit_Index) <= r_RX_Data;
-            -- If the received bit was a '1', adjust the even parity flag
-	    if r_RX_Byte(r_Bit_Index) = '1' then
-               r_Parity_Even_Count <= not r_Parity_Even_Count;
-	    else
-               r_Parity_Even_Count <= r_Parity_Even_Count;
+            if i_Parity_En = '1' then
+               -- If the received bit was a '1', adjust the even parity flag
+	       if r_RX_Data = '1' then
+                  r_Parity_Even_Count <= not r_Parity_Even_Count;
+	       else
+                  r_Parity_Even_Count <= r_Parity_Even_Count;
+               end if;
+            else
+                  r_Parity_Even_Count <= '0';
             end if;
             -- Check if we have sent out all bits
             if r_Bit_Index < 7 then
