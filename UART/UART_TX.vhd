@@ -79,6 +79,16 @@ begin
             r_TX_State_Machine   <= s_Data;
           else
             r_Clk_Count   <= 0;
+            if i_Parity_En = '1' then
+               -- If the transmitted bit was a '1', adjust the even parity flag
+  	       if r_TX_Byte(r_Bit_Index) = '1' then
+                  r_Parity_Even_Count <= not r_Parity_Even_Count;
+	       else
+                  r_Parity_Even_Count <= r_Parity_Even_Count;
+               end if;
+            else
+    	       r_Parity_Even_Count <= '0';
+            end if;
             if r_Bit_Index < 7 then
                 r_Bit_Index <= r_Bit_Index + 1;
                 r_TX_State_Machine   <= s_Data;
@@ -86,12 +96,6 @@ begin
                 r_Bit_Index <= 0;
                 if i_Parity_En = '1' then
       	           r_TX_State_Machine   <= s_Parity;
-                   -- If the transmitted bit was a '1', adjust the even parity flag
-  	           if r_TX_Byte(r_Bit_Index) = '1' then
-                      r_Parity_Even_Count <= not r_Parity_Even_Count;
-	           else
-                      r_Parity_Even_Count <= r_Parity_Even_Count;
-                   end if;
                 else
     	           r_TX_State_Machine   <= s_Stop;
                 end if;
@@ -99,7 +103,7 @@ begin
           end if;
 
         when s_Parity =>
-          o_Tx_Serial <= not r_Parity_Even_Count;	          -- o_TX_Serial <= '1' when (r_Parity_Even_Count = '1') else '0';
+          o_Tx_Serial <= r_Parity_Even_Count;	          -- o_TX_Serial <= '1' when (r_Parity_Even_Count = '1') else '0';
           r_TX_Done     <= '0';
           if r_Clk_Count < (c_CLKS_PER_BIT-1) then
             r_Clk_Count 	 <= r_Clk_Count + 1;
@@ -125,6 +129,7 @@ begin
         when others =>
           r_TX_State_Machine 	<= s_Idle;
 	  r_TX_Done   		<= '0';
+	  o_TX_Serial <= '1';   -- Idle
 
       end case;
     end if;
