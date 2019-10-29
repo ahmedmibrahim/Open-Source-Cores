@@ -27,7 +27,7 @@ architecture tb of uart_rxtx_tb is
   
   signal i_TX_Drive_test    : std_logic := '0';       -- Test Signal for i_TX_Drive input
   
-  signal i_Tx_Byte_test     : std_logic_vector(7 downto 0) := x"6A";       	 -- Test Signal for i_Tx_Byte input
+  signal i_Tx_Byte_test     : std_logic_vector(7 downto 0) := x"6A";           -- Test Signal for i_Tx_Byte input
   signal o_Rx_Byte_test     : std_logic_vector(7 downto 0) := (others => '0'); -- Test Signal for o_Rx_Byte input
   
   signal i_Rx_Serial_test   : std_logic := '1';       -- Test Signal for i_Rx_Serial input
@@ -41,19 +41,19 @@ component UART_TXRX is
   port (
 	 i_Clk         : in  std_logic;                    -- Input Clock Signal for TX & RX Submodules
     
-	 i_Parity_En   : in  std_logic;							-- Enable/Disable Parity Bit Transmission/Reception
-    o_Parity_True : out std_logic;							-- RX Submodule's flag: Received Parity bit is correct
+	 i_Parity_En   : in  std_logic;                    -- Enable/Disable Parity Bit Transmission/Reception
+    o_Parity_True : out std_logic;                    -- RX Submodule's flag: Received Parity bit is correct
     
-	 i_TX_Drive    : in  std_logic;							-- TX Submodule drive signal (Start transmission)
+	 i_TX_Drive    : in  std_logic;                    -- TX Submodule drive signal (Start transmission)
     
-	 i_Tx_Byte     : in  std_logic_vector(7 downto 0);	-- Input Byte to be transmitted on the TX serial line
+	 i_Tx_Byte     : in  std_logic_vector(7 downto 0); -- Input Byte to be transmitted on the TX serial line
   	 o_Rx_Byte     : out std_logic_vector(7 downto 0); -- Output Byte reveived at the RX serial line
 	 
-    i_Rx_Serial   : in  std_logic;							-- Serial input to the receiver
-    o_Tx_Serial   : out std_logic;							-- serial output of the transmitter
+    i_Rx_Serial   : in  std_logic;                    -- Serial input to the receiver
+    o_Tx_Serial   : out std_logic;                    -- serial output of the transmitter
     
-	 o_Tx_Done     : out std_logic;							-- Done Flag for UART TX
-	 o_Rx_Done     : out std_logic							-- Done Flag for UART RX
+	 o_Tx_Done     : out std_logic;                    -- Done Flag for UART TX
+	 o_Rx_Done     : out std_logic                     -- Done Flag for UART RX
   );
 end component;
 

@@ -1,7 +1,7 @@
 -- UART TXRX
 -- Purpose: 			UART_TXRX Top level Module
 -- Author: 				Ahmed Ibrahim
---	Last Updated on: 	October 29th, 2019
+-- Last Updated on: 	October 29th, 2019
 -- License:				Open Source, No License Required
 
 -- 1. Import those libraries
