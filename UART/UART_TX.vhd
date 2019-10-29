@@ -1,7 +1,7 @@
 -- UART_TX
 -- Purpose:          Testbench for UART_TX Module
 -- Author:           Ahmed Ibrahim
---	Last Updated on:  October 29th, 2019
+-- Last Updated on:  October 29th, 2019
 -- License:          Open Source, No License Required
 
 -- 1. Import those libraries
@@ -13,22 +13,22 @@ use ieee.numeric_std.all;
 entity UART_TX is
   port (
 
-  --											|--------|						
-  --							i_TX_Byte	|			|						
-  --				   --------/-------->|	 TX	|---> o_TX_Serial------>
-  --											| Module |						
-  --											|			|						
-  --					<-----o_TX_Done<--|--------|						
-  --											  ^   ^							
-  --					---------i_clk------|	|							
-  --					------i_Parity_En-------|							
+  --                                |--------|						
+  --                    i_TX_Byte   |        |						
+  --              --------/-------->|   TX   |---> o_TX_Serial------>
+  --                                | Module |						
+  --                                |        |						
+  --              <-----o_TX_Done<--|--------|						
+  --                                  ^   ^							
+  --              ---------i_clk------|   |							
+  --              ------i_Parity_En-------|							
  
 	 i_Clk         : in  std_logic;                    -- Input Clock Signal
-	 i_TX_Drive    : in  std_logic;							-- TX drive signal (Start transmission)
-	 i_Parity_En   : in  std_logic;							-- Enable/Disable Parity Bit
+	 i_TX_Drive    : in  std_logic;                    -- TX drive signal (Start transmission)
+	 i_Parity_En   : in  std_logic;                    -- Enable/Disable Parity Bit
 	 i_Tx_Byte     : in  std_logic_vector(7 downto 0); -- Input Byte to be transmitted on the TX serial line
-	 o_Tx_Serial   : out std_logic;							-- serial output of the transmitter
-	 o_Tx_Done     : out std_logic							-- Done Flag for UART TX
+	 o_Tx_Serial   : out std_logic;                    -- serial output of the transmitter
+	 o_Tx_Done     : out std_logic                     -- Done Flag for UART TX
   );
 end UART_TX;
 
