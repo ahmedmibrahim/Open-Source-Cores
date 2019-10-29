@@ -1,4 +1,9 @@
--- UART TX
+-- UART_TX
+-- Purpose:          Testbench for UART_TX Module
+-- Author:           Ahmed Ibrahim
+--	Last Updated on:  October 29th, 2019
+-- License:          Open Source, No License Required
+
 -- 1. Import those libraries
 library ieee;
 use ieee.std_logic_1164.all;
@@ -7,12 +12,23 @@ use ieee.numeric_std.all;
 -- 2. Describe your entity IOs
 entity UART_TX is
   port (
-    i_Clk         : in  std_logic;                    -- <signal_name> : <direction> <type>; 
-    i_TX_Drive    : in  std_logic;
-    i_Parity_En   : in  std_logic;
-    i_Tx_Byte     : in  std_logic_vector(7 downto 0);
-    o_Tx_Serial   : out std_logic;
-    o_Tx_Done     : out std_logic
+
+  --											|--------|						
+  --							i_TX_Byte	|			|						
+  --				   --------/-------->|	 TX	|---> o_TX_Serial------>
+  --											| Module |						
+  --											|			|						
+  --					<-----o_TX_Done<--|--------|						
+  --											  ^   ^							
+  --					---------i_clk------|	|							
+  --					------i_Parity_En-------|							
+ 
+	 i_Clk         : in  std_logic;                    -- Input Clock Signal
+	 i_TX_Drive    : in  std_logic;							-- TX drive signal (Start transmission)
+	 i_Parity_En   : in  std_logic;							-- Enable/Disable Parity Bit
+	 i_Tx_Byte     : in  std_logic_vector(7 downto 0); -- Input Byte to be transmitted on the TX serial line
+	 o_Tx_Serial   : out std_logic;							-- serial output of the transmitter
+	 o_Tx_Done     : out std_logic							-- Done Flag for UART TX
   );
 end UART_TX;
 
@@ -27,7 +43,7 @@ architecture rtl of UART_TX is
   -- p_UART_TX Signals
   signal r_TX_State_Machine   : t_TX_State_Machine := s_Idle;
   signal r_Clk_Count 	      : integer range 0 to c_CLKS_PER_BIT-1 := 0;
-  signal r_Bit_Index          : integer range 0 to 7 := 0;  -- 8 Bits Total
+  signal r_Bit_Index          : integer range 0 to 7 := 0;  					-- 8 Bits Total
   signal r_Tx_Byte            : std_logic_vector(7 downto 0) := x"00";
   signal r_TX_Done            : std_logic := '0';
   signal r_Parity_Even_Count  : std_logic := '0';	
@@ -51,8 +67,8 @@ begin
           r_Bit_Index   <= 0;
 
  	  -- Conditions to exit this state
-          if i_TX_Drive = '1' then       	-- Drive Signal detected
-            r_Tx_Byte <= i_Tx_Byte;		-- Sample Input Byte
+          if i_TX_Drive = '1' then       			-- Drive Signal detected
+            r_Tx_Byte <= i_Tx_Byte;					-- Sample Input Byte
             r_TX_State_Machine <= s_Start;
           else
             r_TX_State_Machine <= s_Idle;       -- Otherwise, stay in s_Idle
@@ -67,7 +83,7 @@ begin
             r_Clk_Count <= r_Clk_Count + 1; 
             r_TX_State_Machine <= s_Start;
           else
-            r_Clk_Count <= 0;  		-- reset counter since we found the middle
+            r_Clk_Count <= 0;  						-- reset counter since we found the middle
             r_TX_State_Machine <= s_Data;
           end if;
 
