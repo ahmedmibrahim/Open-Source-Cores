@@ -1,4 +1,9 @@
--- UART RX
+-- UART_RX
+-- Purpose:          Testbench for UART_RX Module
+-- Author:           Ahmed Ibrahim
+-- Last Updated on:  October 29th, 2019
+-- License:          Open Source, No License Required
+
 -- 1. Import those libraries
 library ieee;
 use ieee.std_logic_1164.all;
@@ -7,12 +12,24 @@ use ieee.numeric_std.all;
 -- 2. Describe your entity
 entity UART_RX is
   port (
-    i_Clk         : in  std_logic;                    -- <signal_name> : <direction> <type>; 
-    i_Parity_En   : in  std_logic;
-    i_Rx_Serial   : in  std_logic;
-    o_Rx_Byte     : out std_logic_vector(7 downto 0);
-    o_Parity_True : out std_logic;
-    o_Rx_Done     : out std_logic
+
+  --              ------i_Parity_En-------|
+  --              ---------i_clk------|   |
+  --                                  |   |
+  --                                  v   v
+  --                                |--------|
+  --                                |        |
+  --                     o_RX_Byte  |   RX   |<---i_RX_Serial<------
+  --              <-------/---------| Module	|						 
+  --                                |        |						 
+  --              <-----o_RX_Done<--|--------|						 					 														 
+  
+	 i_Clk         : in  std_logic;                    -- Input Clock Signal
+	 i_Parity_En   : in  std_logic;                    -- Enable/Disable Parity Bit
+	 i_Rx_Serial   : in  std_logic;                    -- Serial input to the receiver
+	 o_Rx_Byte     : out std_logic_vector(7 downto 0); -- Output Byte reveived at the RX serial line
+	 o_Parity_True : out std_logic;                    -- RX's flag: Received Parity bit is correct
+	 o_Rx_Done     : out std_logic                     -- Done Flag for UART RX
   );
 end UART_RX;
 
